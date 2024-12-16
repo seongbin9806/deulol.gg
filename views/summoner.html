@@ -1,0 +1,88 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div id="headerFixBox">
+    <a href="/" class="logo">
+        <span class="deu">DEULOL.</span>GG
+    </a>
+    <form onsubmit="searchUser(event)">
+        <div class="userNameWrap">
+            <input type="text" name="searchUserName" class="userNameInput" placeholder="소환사명 + #KR1"/>
+            <img src="/img/icon_search_color.svg" onclick="searchUser(event)"/>
+        </div>
+    </form>
+</div>
+<div id="summoner">
+    {% if accountData != null %}
+    <div class="userInfo">
+        <!-- 프로필 아이콘 이미지 출력 -->
+        <div class="profileWrap">
+            <img src="https://deeplol-ddragon-cdn.deeplol.gg/cdn/14.24.1/img/profileicon/{{ accountData.profileIconId }}.png?f=webp"
+                alt="Profile Icon" />
+            <span>{{ accountData.summonerLevel }}</span>
+        </div>
+        <div class="profileDefaultWrap">
+            <div class="nameWrap">
+                <p class="name">
+                    {{ accountData.gameName }}
+                    <span class="tag">#{{ accountData.tagLine }}</span>
+                </p>
+            </div>
+            <div class="refreshWrap">
+                <button class="refreshBtn">
+                    <img src="/img/ico_refresh.svg" />
+                    전적 갱신
+                </button>
+                <span class="lastUpdate">최근 갱신: {{accountData.formatLastUpdateDate}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="tierWrap">
+        <div class="solo">
+            {% if accountData.soloRankTier != null %}
+            <div class="tierImg">
+                <img src="https://www.deeplol.gg/images/Emblem_{{accountData.soloRankTier}}.png" />
+            </div>
+            <div class="rankWrap">
+                <p class="rankType">개인/2인전</p>
+                <div>
+                    <span class="tierName">{{accountData.soloRankTier}} {{accountData.soloRankRank}}</span>
+                    <span class="lp">{{accountData.soloRankLP}} LP</span>
+                </div>
+                <p class="rankCnt">
+                    {{accountData.totalSoloRank}}전 {{accountData.soloRankWins}}승 {{accountData.soloRankLosses}}패
+                    ({{accountData.soloRankRate}}%)
+                </p>
+            </div>
+            {% else %}
+            <p class="unranked">개인/2인전 - Unranked</p>
+            {% endif %}
+        </div>
+
+        <div class="flex">
+            {% if accountData.flexRankTier != null %}
+            <div class="tierImg">
+                <img src="https://www.deeplol.gg/images/Emblem_{{accountData.flexRankTier}}.png" />
+            </div>
+            <div class="rankWrap">
+                <p class="rankType">자유 5대5 대전</p>
+                <div>
+                    <span class="tierName">{{accountData.flexRankTier}} {{accountData.flexRankRank}}</span>
+                    <span class="lp">{{accountData.flexRankLP}} LP</span>
+                </div>
+                <p class="rankCnt">
+                    {{accountData.totalFlexRank}}전 {{accountData.flexRankWins}}승 {{accountData.flexRankLosses}}패
+                    ({{accountData.flexRankRate}}%)
+                </p>
+            </div>
+            {% else %}
+            <p class="unranked">자유 5대5 대전 - Unranked</p>
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <p class="empty">{{gameName}} #{{tagLine}}에 일치하는 소환사가 없어요.</p>
+    <p class="empty">정확한 소환사명과 태그를 입력해주세요.(소환사명 + #KR1)</p>
+    {% endif %}
+</div>
+{% endblock %}

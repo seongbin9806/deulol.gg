@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEULOL.GG</title>
+    <link rel="stylesheet" href="/css/reset.css"> <!-- 리셋 스타일 시트 연결 -->
+    <link rel="stylesheet" href="/css/main.css"> <!-- 공통 스타일 시트 연결 -->
+</head>
+
+<body>
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <span id="toast">This is a toast message!</span>
+
+    <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script> <!-- Axios 로드 -->
+    <script type="text/javascript" src="/js/util.js"></script>
+    <script type="text/javascript" src="/js/common.js"></script>
+    {% block script %}
+    {% endblock %}
+</body>
+
+</html>
