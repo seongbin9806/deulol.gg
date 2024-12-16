@@ -23,10 +23,13 @@
 git clone https://github.com/yourusername/deulol.gg.git
 cd deulol.gg
 npm install
+```
 
+```bash
 ### 2. 환경 변수 설정
 프로젝트 루트 디렉토리에 .env 파일을 생성하고 다음과 같은 환경 변수를 설정합니다.
 
 RAPID_API_KEY=your_riot_api_key
 COUNTRY=kr
 MONGO_URI=your_mongodb_connection_string
+```
