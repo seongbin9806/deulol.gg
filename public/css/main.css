@@ -834,7 +834,7 @@
 .popupContainer .popupBox{
     max-width: 800px;
     width: 100%;
-    height: 300px;
+    height: 320px;
     padding: 24px;
     border-radius: 10px;
     border: 1px solid var(----Stroke, #E6E7E7);
@@ -856,6 +856,8 @@
         margin-top: 35px;
         overflow-x: auto;
         gap: 15px;
+
+        overflow-y: hidden;
 }
 
 #youtubeList .thumbnailsBox {
@@ -874,12 +876,14 @@
     font-size: 14px;
     margin-top: 6px;
     letter-spacing: -1px;
+    max-width: 320px;
     text-overflow: ellipsis;
     word-break: break-all;    
 }
 
 #youtubeList .description {
     color: #b6b6b6;
+    max-width: 320px;
     font-size: 11px;
     min-height: 22px;
     margin-top: 5px;

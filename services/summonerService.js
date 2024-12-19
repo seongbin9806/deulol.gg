@@ -9,6 +9,9 @@ const FLASK_API_URL = 'http://127.0.0.1:8090/ai_score';
  * @param {String} region - 리전
  */
 async function getMatchDetails(matchId, apiKey, region) {
+
+    await new Promise(resolve => setTimeout(resolve, 50));
+    
     const matchDetailUrl = `https://${region}.api.riotgames.com/lol/match/v5/matches/${matchId}?api_key=${apiKey}`;
     const response = await axios.get(matchDetailUrl);
     return response.data;
