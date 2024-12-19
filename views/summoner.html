@@ -103,9 +103,9 @@
 
 <div id="youtubePopup" class="popupContainer">
     <div class="popupBox">
-        <div class="close">×</div>
+        <div class="close" onclick="toggleYoutubeModal()">×</div>
 
-        <div id="yotubeList">
+        <div id="youtubeList">
 
         </div>
     </div>
@@ -119,19 +119,37 @@
     const puuid = '{{ accountData.puuid }}';
     
     function toggleYoutubeModal() {
-        // document.getElementById("youtubePopup").
+        document.getElementById('youtubePopup').classList.toggle('show');
     }
 
     async function showYoutubeModal(champion) {
         try {
             const response = await axios.post(`/getYoutubeList/${champion}`, {});
 
-            let youtubeList = response.data;
+            let youtubeList = response.data,
+                youtubeHtml = "";
 
-            if(!youtubeList) {
+            if(!youtubeList.length) {
                 util.showToastMsg(`제공 될만한 유튜브 영상이 존재하지 않아요!`);
                 return;
             }
+
+            for(let youtubeData of youtubeList) {
+                let data = youtubeData.snippet;
+                
+                youtubeHtml += `
+                    <a href="https://www.youtube.com/watch?v=${youtubeData.id.videoId}" class="youtube" target="_blank">
+                        <div class="thumbnailsBox">
+                            <img class="thumbnails" src="${data.thumbnails.medium.url}"/>
+                            <img class="youtubeIcon" src="/img/ico_youtube.png">
+                        </div>
+                        <p class="youtubeTitle">${data.title}</p>
+                        <p class="description">${data.description}</p>
+                    </a>
+                `;
+            }
+            document.getElementById('youtubeList').innerHTML = youtubeHtml;
+            toggleYoutubeModal();
 
         } catch (error) {
             console.error('Error showYoutubeModal:', error);

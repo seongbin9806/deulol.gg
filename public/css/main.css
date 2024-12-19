@@ -843,26 +843,46 @@
     overflow: auto;
 }
 
-.popupContainer .title{
-    display: flex;
-    justify-content: space-between;
-    align-content: center;
-}
-
-.popupContainer .title p{
-    color: var(----dark-100, #061310);    
-    font-size: 16px;    
-    font-weight: 700;
-}
-
-.popupContainer .title i{
-    cursor: pointer;
-    color: #061310;
-}
-
 .popupContainer .close{
     display: inline-block;
     float: right;
     cursor: pointer;
     margin-bottom: 20px;
+}
+
+#youtubeList {
+    display: flex;
+        align-items: center;
+        margin-top: 35px;
+        overflow-x: auto;
+        gap: 15px;
+}
+
+#youtubeList .thumbnailsBox {
+    position: relative;
+}
+
+#youtubeList .youtubeIcon {
+    width: 50px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+}
+
+#youtubeList .youtubeTitle {
+    font-size: 14px;
+    margin-top: 6px;
+    letter-spacing: -1px;
+    text-overflow: ellipsis;
+    word-break: break-all;    
+}
+
+#youtubeList .description {
+    color: #b6b6b6;
+    font-size: 11px;
+    min-height: 22px;
+    margin-top: 5px;
+    text-overflow: ellipsis;
+    word-break: break-all;
 }
