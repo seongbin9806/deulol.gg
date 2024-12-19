@@ -7,6 +7,8 @@ const nunjucks = require('nunjucks');
 // 작성 코드 연결
 const db = require('./models');
 const pageRouter = require('./routes/page');
+const accountRouter = require('./routes/account');
+const youtubeRouter = require('./routes/youtube');
 
 const app = express();
 
@@ -36,7 +38,9 @@ app.use(express.urlencoded({ extended: false })); // 폼 데이터 처리
 
 // 4. 라우터 등록
 // 각각의 경로에 해당하는 요청 처리 로직을 연결
-app.use('/', pageRouter); // 메인 페이지 및 기타 기본 경로
+app.use('/', pageRouter); // 메인관련 요청 처리
+app.use('/', accountRouter); // 유저관련 요청 처리
+app.use('/', youtubeRouter); // 유튜브관련 요청 처리
 
 // 5. 404 에러 처리 미들웨어
 // 등록되지 않은 경로로 요청이 들어올 경우 처리
@@ -57,6 +61,6 @@ app.use((err, req, res, next) => {
 
 // 서버 실행
 // 지정된 포트에서 Express 서버를 실행
-app.listen(app.get('port'), () => {
+app.listen(app.get('port'), '0.0.0.0', () => {
   console.log(app.get('port'), '번 포트에서 대기 중');
 });

@@ -5,10 +5,16 @@
     <a href="/" class="logo">
         <span class="deu">DEULOL.</span>GG
     </a>
-    <form onsubmit="searchUser(event)">
+    <form onsubmit="searchUser(event)" style="position: relative;">
         <div class="userNameWrap">
-            <input type="text" name="searchUserName" class="userNameInput" placeholder="소환사명 + #KR1"/>
-            <img src="/img/icon_search_color.svg" onclick="searchUser(event)"/>
+            <input type="text" id="searchUserName" name="searchUserName" class="userNameInput" placeholder="소환사명 + #KR1"
+                onkeyup="getUserList()" onfocus="getUserList()" autocomplete="off" />
+            <img src="/img/icon_search_color.svg" onclick="searchUser(event)" />
+        </div>
+        <div id="userListWrap" class="hide">
+            <span class="title">소환사</span>
+            <div id="userList">
+            </div>
         </div>
     </form>
 </div>
@@ -29,8 +35,8 @@
                 </p>
             </div>
             <div class="refreshWrap">
-                <button class="refreshBtn">
-                    <img src="/img/ico_refresh.svg" />
+                <button class="refreshBtn" onclick="refreshUser()">
+                    <img id="refreshImg" src="/img/ico_refresh.svg" />
                     전적 갱신
                 </button>
                 <span class="lastUpdate">최근 갱신: {{accountData.formatLastUpdateDate}}</span>
@@ -80,9 +86,420 @@
             {% endif %}
         </div>
     </div>
+
+    <div id="gameList">
+    </div>
+    <div id="moreViewBtnBox" class="moreViewBtnBox" onclick="getUserMatchList();">
+        <button id="moreViewBtn" class="moreViewBtn">
+            <img src="/img/ico_updating.svg" />
+        </button>
+    </div>
+
     {% else %}
     <p class="empty">{{gameName}} #{{tagLine}}에 일치하는 소환사가 없어요.</p>
     <p class="empty">정확한 소환사명과 태그를 입력해주세요.(소환사명 + #KR1)</p>
     {% endif %}
 </div>
+
+<div id="youtubePopup" class="popupContainer">
+    <div class="popupBox">
+        <div class="close">×</div>
+
+        <div id="yotubeList">
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    var page = 1;
+    const puuid = '{{ accountData.puuid }}';
+    
+    function toggleYoutubeModal() {
+        // document.getElementById("youtubePopup").
+    }
+
+    async function showYoutubeModal(champion) {
+        try {
+            const response = await axios.post(`/getYoutubeList/${champion}`, {});
+
+            let youtubeList = response.data;
+
+            if(!youtubeList) {
+                util.showToastMsg(`제공 될만한 유튜브 영상이 존재하지 않아요!`);
+                return;
+            }
+
+        } catch (error) {
+            console.error('Error showYoutubeModal:', error);
+        }
+    }
+
+    async function refreshUser() {
+        document.getElementById('refreshImg').src = '/img/ico_updating.svg';
+
+        try {
+            const response = await axios.post(`/account/updateInfo/${puuid}`, {});
+
+            if (response.data.result) {
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            }
+        } catch (error) {
+            console.error('Error updating account info:', error);
+        }
+    }
+
+    async function getMatchList() {
+        try {
+            const response = await axios.post(`/account/updateInfo/${puuid}`, {});
+
+            console.log(response.data);
+        } catch (error) {
+            console.error('Error updating account info:', error);
+        }
+    }
+
+    async function getUserMatchList() {
+        try {
+            let moreViewBtn = document.getElementById('moreViewBtn');
+            moreViewBtn.innerHTML = `<img src="/img/ico_updating.svg">`;
+
+            const response = await axios.post(`/account/getUserMatchList/${puuid}/${page}`, {});
+            let matchList = response.data.matchList,
+                myMatchList = [];
+
+            /* 나의 정보만 추출해서 가져오기 */
+            for (let matchData of matchList) {
+                for (let myMatchData of matchData.info.participants) {
+                    if (myMatchData.puuid == puuid) {
+                        myMatchList.push(myMatchData);
+                        break;
+                    }
+                }
+            }
+            setMyMatchList(matchList, myMatchList);
+
+            if(matchList.length < 10) {
+                moreViewBtn.remove();
+            }else {
+                moreViewBtn.innerHTML = `<img src="/img/ico_refresh.svg"> 전적 더 불러오기`;
+            }
+
+            page++;
+        } catch (error) {
+            console.error('Error updating account info:', error);
+        }
+    }
+
+    function setMyMatchList(matchList, myMatchList) {
+        let myMatchHtml = "";
+
+        for (let index in myMatchList) {
+            let data = myMatchList[index],
+                matchData = matchList[index].info,
+                playerData = matchData.participants,
+                winLoseCls = data.win ? 'win' : 'lose';
+
+            let itemHtml = [],
+                matchPlayer1 = "",
+                matchPlayer2 = "";
+
+            /* 플레이어 셋 */
+            for (let index in playerData) {
+                let player = playerData[index];
+                let playerHtml = `
+                    <div class="matchPlayer">
+                        <img class="imgChamp" src="https://deeplol-ddragon-cdn.deeplol.gg/cdn/14.24.1/img/champion/${player.championName}.png?w=64&amp;h=64&amp;f=webp" alt="">
+                        <a href="/summoner/${player.riotIdGameName}-${player.riotIdTagline}">${player.riotIdGameName}</a>
+                    </div>`;
+
+                if (index <= 4) {
+                    matchPlayer1 += playerHtml;
+                } else {
+                    matchPlayer2 += playerHtml;
+                }
+            }
+
+            /* 아이템 셋 */
+            for (let item = 0; item <= 6; item++) {
+                let itemNumber = 0,
+                    isNoItem = false;
+
+                switch (item) {
+                    case 0: itemNumber = data.item0; isNoItem = !data.item0; break;
+                    case 1: itemNumber = data.item1; isNoItem = !data.item1; break;
+                    case 2: itemNumber = data.item2; isNoItem = !data.item2; break;
+                    case 3: itemNumber = data.item3; isNoItem = !data.item3; break;
+                    case 4: itemNumber = data.item4; isNoItem = !data.item4; break;
+                    case 5: itemNumber = data.item5; isNoItem = !data.item5; break;
+                    case 6: itemNumber = data.item6; isNoItem = !data.item6; break;
+                }
+                if (isNoItem) {
+                    itemHtml[item] = `<div class="item noItem"></div>`;
+                } else {
+                    itemHtml[item] = `
+                    <div class="item ${item == 6 ? 'ward' : ''}">
+                        <img src="https://deeplol-ddragon-cdn.deeplol.gg/cdn/14.24.1/img/item/${itemNumber}.png?w=56&amp;h=56&amp;f=webp" alt="">
+                    </div>`;
+                }
+            }
+
+            myMatchHtml += `<div class="game ${winLoseCls + 'B'}">
+                        <div class="line ${winLoseCls}"></div>
+                        <div class="gameInfo">
+                            <p class="gameType ${winLoseCls}">${getGameMode(matchData.queueId)}</p>
+                            <p class="gamePlayTime">${timeAgo(matchData.gameEndTimestamp)}</p>
+                            <p>
+                                <span class="gameResult ${winLoseCls}">${data.win ? '승리' : '패배'}</span>
+                                <span class="playTime">${formatGameDuration(matchData.gameDuration)}</span>
+                            </p>
+                        </div>
+                        <div class="champInfo">
+                            <div class="champDetailBox">
+                                <div class="imgChampBox">
+                                    <img class="icoImage" src="/img/ico_youtube.png" onclick="showYoutubeModal('${data.championName}')">
+                                    <img class="imgChamp" src="https://deeplol-ddragon-cdn.deeplol.gg/cdn/14.24.1/img/champion/${data.championName}.png?&amp;f=webp" alt="Caitlyn.png">
+                                </div>
+                                <div class="kdaBox">
+                                    <p class="killdat">
+                                        ${data.kills} / <span class="death">${data.deaths}</span> / ${data.assists}
+                                    </p>
+                                    <p class="kda">${calculateKDA(data.kills, data.deaths, data.assists)} KDA</p>
+                                </div>
+                            </div>
+                            <div class="itemBox">
+                                ${itemHtml[0]}
+                                ${itemHtml[1]}
+                                ${itemHtml[2]}
+                                ${itemHtml[3]}
+                                ${itemHtml[4]}
+                                ${itemHtml[5]}
+                                ${itemHtml[6]}
+                            </div>
+                        </div>
+                        <div class="aiScoreBox">
+                            <p class="aiScoreTitle">AI-Score</p>
+                            <span class="aiScore ${data.rank >= 5? 'under' : ''}">${data.aiScore}</span>
+                            <span class="aiScoreRank">${data.rank}등</span>
+                        </div>
+                        <div class="matchPlayerBox">
+                            <div class="matchTeam">
+                                ${matchPlayer1}
+                            </div>
+                            <div class="matchTeam">
+                                ${matchPlayer2}
+                            </div>
+                        </div>
+                        <div class="detailBtnBox" onclick="toggleDetailMatch(${matchData.gameId})">
+                            <img class="" src="/img/icon_arrow_${winLoseCls}.svg">
+                        </div>
+                    </div>`;
+
+            myMatchHtml += getDetailMatch(matchData);
+        }
+
+        document.getElementById('gameList').insertAdjacentHTML('beforeend', myMatchHtml);
+    }
+
+    function toggleDetailMatch(gameId) {
+        const detailElement = document.querySelector(`.detail[data-id="${gameId}"]`);
+
+        detailElement.classList.toggle('active');
+    }
+
+    function getDetailMatch(matchData) {
+        let detailMatchHtml = "";
+        detailMatchHtml += `<div class="detail" data-id="${matchData.gameId}">`;
+
+        for (let index in matchData.participants) {
+            let data = matchData.participants[index],
+                itemHtml = [];
+
+            /* 아이템 셋 */
+            for (let item = 0; item <= 6; item++) {
+                let itemNumber = 0,
+                    isNoItem = false;
+
+                switch (item) {
+                    case 0: itemNumber = data.item0; isNoItem = !data.item0; break;
+                    case 1: itemNumber = data.item1; isNoItem = !data.item1; break;
+                    case 2: itemNumber = data.item2; isNoItem = !data.item2; break;
+                    case 3: itemNumber = data.item3; isNoItem = !data.item3; break;
+                    case 4: itemNumber = data.item4; isNoItem = !data.item4; break;
+                    case 5: itemNumber = data.item5; isNoItem = !data.item5; break;
+                    case 6: itemNumber = data.item6; isNoItem = !data.item6; break;
+                }
+                if (isNoItem) {
+                    itemHtml[item] = `<div class="item noItem"></div>`;
+                } else {
+                    itemHtml[item] = `
+                    <div class="item ${item == 6 ? 'ward' : ''}">
+                        <img src="https://deeplol-ddragon-cdn.deeplol.gg/cdn/14.24.1/img/item/${itemNumber}.png?w=56&amp;h=56&amp;f=webp" alt="">
+                    </div>`;
+                }
+            }
+                
+            if(index == 0 || index == 5) {
+                detailMatchHtml += `
+                        <table class="${data.win? 'win' : 'lose'}">
+                            <thead>
+                                <th width="180">
+                                    <span class="btn ${data.win? 'win' : 'lose'}">${data.win? '승리' : '패배'}</span>
+                                    <span>${index == 0? '(블루팀)' : '(레드팀)'}</span>
+                                </th>
+                                <th width="80">AI-Score</th>
+                                <th width="100">KDA</th>
+                                <th width="80">피해량</th>
+                                <th width="80">CS</th>
+                                <th width="80" class="">시야점수</th>
+                                <th>아이템</th>
+                            </thead>
+                            <tbody>
+                `;
+            }
+
+            detailMatchHtml += `
+                        <tr>
+                            <td>
+                                <div class="tab1">
+                                    <img class="champ" src="https://deeplol-ddragon-cdn.deeplol.gg/cdn/14.24.1/img/champion/${data.championName}.png?w=64&amp;h=64&amp;f=webp" alt="">
+                                    <a class="name" href="/summoner/${data.riotIdGameName}-${data.riotIdTagline}">
+                                        ${data.riotIdGameName}
+                                        <span class="tag">#${data.riotIdTagline}</span>
+                                    </a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="tab2">
+                                    <span class="score ${data.rank >= 5? 'under' : ''}">${data.aiScore}</span>
+                                    <span class="ranking">${data.rank}등</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="tab3">
+                                    <span class="kda1">${data.kills} / <span class="death">${data.deaths}</span> / ${data.assists}</span>
+                                    <span class="kda2">${calculateKDA(data.kills, data.deaths, data.assists)} KDA</p>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="tab4">
+                                    <span class="damage">${data.totalDamageDealtToChampions.toLocaleString()}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="tab5">
+                                    <span class="cs">${data.totalMinionsKilled + data.neutralMinionsKilled}개</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="tab6">
+                                    <span class="seeScore">${data.visionScore}점</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="tab7">
+                                    ${itemHtml[0]}
+                                    ${itemHtml[1]}
+                                    ${itemHtml[2]}
+                                    ${itemHtml[3]}
+                                    ${itemHtml[4]}
+                                    ${itemHtml[5]}
+                                    ${itemHtml[6]}
+                                </div>
+                            </td>
+                        </tr>
+        `;
+        if(index == 4 || index == 9) {
+            detailMatchHtml += `
+                    </tbody>
+                </table>
+            `;
+        }
+        } 
+        detailMatchHtml += "</div>";
+
+        return detailMatchHtml;
+    }
+
+    function getGameMode(queueId) {
+        const queueMap = {
+            0: "자유 게임",
+            420: "솔로 랭크",
+            430: "일반 블라인드 픽",
+            440: "자유 랭크",
+            450: "칼바람 나락",
+            490: "일반 게임",
+            700: "튜토리얼 게임",
+            720: "원 포 올",
+            750: "클래시",
+            800: "암살자 모드",
+            820: "눈싸움",
+            830: "URF",
+            840: "오딘",
+            890: "봇 게임"
+        };
+
+        return queueMap[queueId] || "알 수 없는 게임 모드";
+    }
+
+    function timeAgo(dateTimestamp) {
+        const date = new Date(dateTimestamp);
+        const now = new Date();
+        const secondsPast = Math.floor((now - date) / 1000);
+
+        if (secondsPast < 60) {
+            return `방금 전`;
+        }
+        if (secondsPast < 3600) {
+            const minutesPast = Math.floor(secondsPast / 60);
+            return `${minutesPast}분 전`;
+        }
+        if (secondsPast <= 86400) {
+            const hoursPast = Math.floor(secondsPast / 3600);
+            return `${hoursPast}시간 전`;
+        }
+        if (secondsPast <= 2592000) {
+            const daysPast = Math.floor(secondsPast / 86400);
+            return `${daysPast}일 전`;
+        }
+        if (secondsPast <= 31536000) {
+            const monthsPast = Math.floor(secondsPast / 2592000);
+            return `${monthsPast}개월 전`;
+        }
+        const yearsPast = Math.floor(secondsPast / 31536000);
+        return `${yearsPast}년 전`;
+    }
+
+    function formatGameDuration(seconds) {
+        // 총 초를 분과 초로 변환
+        const minutes = Math.floor(seconds / 60); // 1분 = 60초
+        const remainingSeconds = seconds % 60; // 남은 초
+
+        // 두 자릿수로 포맷
+        const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+        const formattedSeconds = remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds;
+
+        // MM:SS 형식으로 반환
+        return `${formattedMinutes}:${formattedSeconds}`;
+    }
+
+    function calculateKDA(kills, deaths, assists) {
+        // 데스가 0일 경우 Perfect 반환
+        if (deaths === 0) {
+            return "Perfect";
+        }
+        // KDA 계산
+        const kda = (kills + assists) / deaths;
+
+        // KDA를 2자리수 형식으로 반환 (소수점 2자리까지)
+        return kda.toFixed(2);
+    }
+
+    getUserMatchList();
+</script>
 {% endblock %}

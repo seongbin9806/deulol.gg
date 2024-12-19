@@ -30,6 +30,15 @@
     margin-bottom: 6px;
     box-shadow: rgba(0, 76, 255, 0.3) 0px 0px 6px;
     margin-top: 5px;
+    max-height: 300px;
+    overflow: auto;
+    background: #fff;
+}
+
+#headerFixBox #userListWrap {
+    position: absolute;
+    max-width: 460px;
+    right: 0;
 }
 
 #userListWrap .title {
@@ -46,6 +55,7 @@
 
 #userList {
     margin-bottom: 10px;
+    padding: 0 15px;
 }
 
 #userList .empty {
@@ -58,11 +68,11 @@
 
 #main {
     width: 100%;
-    height: 100vh;
+    height: calc(100vh - 100px);
     display: flex;
     align-items: center;
     flex-direction: column;
-    margin-top: 100px;
+    padding-top: 100px;
 }
 
 #main .userNameWrap {
@@ -111,7 +121,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1;
+    z-index: 5;
     /* background: #161616; */
     border-bottom: 1px solid #cecece;
     background: #ebebff;
@@ -155,10 +165,46 @@
     margin-left: 20px;
 }
 
+#userList .userWrap {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    cursor: pointer;
+}
+
+#userList .userWrap:hover {
+    background: #eaeaea;
+    border-radius: 5px;
+}
+
+#userList .userIcon {
+    width: 34px;
+    border-radius: 5px;
+}
+
+#userList .userTier {
+    width: 28px;
+    margin-left: 10px;
+}
+
+#userList .userName {
+    letter-spacing: -1px;
+    margin-left: 10px;
+}
+
+#userList .userName .name {
+    font-size: 13px;
+}
+
+#userList .userName .tag {
+    font-size: 12px;
+    padding-left: 1px;
+    color: #464646;
+}
+
 #summoner {
     width: 1000px;
-    margin: 0 auto;
-    margin-top: 140px;
+    margin: 140px auto;
 }
 
 #summoner .userInfo {
@@ -239,6 +285,7 @@
 }
 
 #summoner .refreshBtn img {
+    width: 13px;
     margin-right: 5px;
     margin-top: 3px;
 }
@@ -317,4 +364,505 @@
     margin-top: 10px;
     color: rgb(175, 178, 191);
     text-align: center;
+}
+
+#gameList {
+    margin-top: 20px;
+}
+
+#gameList .loaderBox {
+    text-align: center;
+}
+
+#gameList .loader {
+    width: 60px;
+}
+
+#gameList .line {
+    position: absolute;
+    width: 6px;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    z-index: 3;
+    background: rgb(76, 146, 252);
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+#gameList .line.lose {
+    background: rgb(235, 83, 83);
+}
+
+#gameList .gameInfo {
+    margin-left: 25px;
+    width: 90px;
+}
+
+#gameList .gameType {
+    font-size: 16px;
+    font-weight: 500 !important;
+    color: rgb(76, 146, 252);
+}
+
+#gameList .gamePlayTime {
+    font-size: 12px;
+    margin-top: 5px;
+    line-height: 14px;
+    color: rgb(102, 116, 143);
+    margin-bottom: 8px;
+}
+
+#gameList .gameResult {
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 12px;
+    color: rgb(76, 146, 252);
+}
+
+#gameList .playTime {
+    color: rgb(102, 116, 143);
+    font-weight: 400;
+    font-size: 12px;
+}
+
+#gameList .game {
+    border: 1px solid rgb(195, 209, 220);
+    overflow: hidden;
+    display: flex;
+    border-radius: 5px;
+    padding: 0 10px;
+    justify-content: space-between;
+    align-items: center;
+    width: 800px;
+    margin: 0 auto;
+    margin-bottom: 7px;
+    position: relative;
+    background-color: rgb(231, 240, 252);
+}
+
+#gameList .game.loseB {
+    background-color: rgb(255, 240, 238);
+}
+
+#gameList .champDetailBox {
+    display: flex;
+}
+
+#gameList .imgChampBox {
+    position: relative;
+}
+
+#gameList .icoImage {
+    width: 24px;
+    position: absolute;
+    right: -7px;
+    top: -10px;
+    cursor: pointer;
+}
+
+#gameList .imgChamp {
+    width: 58px;
+    border-radius: 5px;
+}
+
+#gameList .spellBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-left: 5px;
+}
+
+#gameList .imgSpell {
+    width: 24px;
+    border-radius: 4px;
+}
+
+#gameList .runeBox {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    margin-left: 5px;
+}
+
+#gameList .runeBox img {
+    width: 24px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+#gameList .kdaBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-left: 20px;
+}
+
+#gameList .kdaBox .kda {
+    font-size: 12px;
+    margin-top: 8px;
+    color: rgb(102, 116, 143);
+}
+
+#gameList .killdat {
+    color: rgb(53, 64, 82);
+    font-size: 15px;
+}
+
+#gameList .killdat .death {
+    color: rgb(194, 74, 74);
+}
+
+#gameList .aiScoreBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#gameList .aiScoreBox .aiScoreTitle {
+    color: rgb(102, 116, 143);
+    font-size: 12px;
+}
+
+#gameList .aiScoreBox .aiScore {
+    display: flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 3px;
+    background-color: rgb(84, 181, 158);
+    font-size: 19px;
+    text-align: center;
+    min-width: 2ch;
+    font-weight: 400;
+    color: white;
+    margin: 10px 0;
+}
+
+#gameList .aiScoreBox .aiScore.under {
+    background: rgb(229, 116, 116);
+}
+
+#gameList .aiScoreBox .aiScoreRank {
+    color: rgb(53, 64, 82);
+    font-size: 12px;
+}
+
+#gameList .matchTeam {
+    width: 125px;
+}
+
+#gameList .matchPlayerBox {
+    display: flex;
+    width: 250px;
+    margin-top: 6px;
+    justify-content: space-between;
+}
+
+#gameList .matchPlayer {
+    display: flex;
+    align-items: center;
+    color: rgb(102, 116, 143);
+    font-size: 12px;
+    letter-spacing: -1px;
+    margin-bottom: 5px;
+
+}
+
+#gameList .matchPlayer img {
+    width: 16px;
+    height: 16px;
+    margin-right: 3px;
+}
+
+#gameList .matchPlayer a {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    color: rgb(102, 116, 143);
+}
+
+#gameList .detailBtnBox {
+    height: 105px;
+    width: 10px;
+    position: relative;
+}
+
+#gameList .detailBtnBox img {
+    position: absolute;
+    bottom: 0px;
+    cursor: pointer;
+}
+
+#gameList .itemBox {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+}
+
+#gameList .itemBox .item {
+    aspect-ratio: 1 / 1;
+    width: 24px;
+    border-radius: 4px;
+    margin: 0 2px;
+}
+
+#gameList .itemBox .item img {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+}
+
+#gameList .itemBox .item.ward img {
+    border-radius: 50%;
+}
+
+#gameList .itemBox .item.noItem {
+    background-color: rgb(184 184 184);
+    opacity: 0.3;
+}
+
+#gameList .lose {
+    color: rgb(235, 83, 83);
+}
+
+#gameList .win {
+    color: rgb(76, 146, 252);
+}
+
+#summoner .moreViewBtnBox {
+    width: 823px;
+    margin: 0 auto;
+}
+
+#summoner .moreViewBtn {
+    width: 100%;
+    color: rgb(255, 255, 255);
+    border-radius: 8px;
+    padding: 16px 0;
+    background-color: rgb(60 144 255);
+    border: 1px solid #eee;
+}
+
+#summoner .moreViewBtn img {
+    width: 12px;
+}
+
+#summoner .detail {
+    display: none;
+    border: 1px solid rgb(195, 209, 220);
+    overflow: hidden;
+    border-radius: 5px;
+    width: 800px;
+    margin: 0 auto;
+    margin-bottom: 7px;
+    position: relative;
+    background-color: rgb(231, 240, 252);
+}
+
+#summoner .detail.active {
+    display: block;
+}
+
+#summoner table.lose {
+    background-color: rgb(255, 240, 238);
+}
+
+#summoner table tr {
+    border-top: 1px solid rgb(195, 209, 220);
+}
+
+#summoner table th {
+    background-color: rgb(255, 255, 255);
+    color: rgb(102, 116, 143);
+    position: relative;
+    font-size: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgb(195, 209, 220);
+}
+
+#summoner .tab1 {
+    display: flex
+    ;
+        align-items: center;
+    margin-left: 10px;
+    
+}
+
+#summoner .tab1 .champ {
+    width: 34px;
+    aspect-ratio: 1 / 1;
+    border-radius: 5px;
+}
+
+#summoner .tab1 .name {
+    color: rgb(53, 64, 82);
+    font-size: 12px;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 120px;
+    margin-left: 8px;
+    letter-spacing: -1px;
+}
+
+#summoner .tab1 .name .tag{
+    font-size: 11px;
+    color: #757575;
+    letter-spacing: -1px;
+}
+
+#summoner .tab2{
+    display: flex
+    ;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        font-weight: 500;
+        font-size: 12px;
+        color: rgb(102, 116, 143);
+}
+
+#summoner .tab2 .score {
+    display: flex
+    ;
+        -webkit-box-pack: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        align-items: center;
+        padding: 4px 8px;
+        border-radius: 3px;
+        background-color: rgb(84, 181, 158);
+        font-size: 14px;
+        text-align: center;
+        min-width: 2ch;
+        font-weight: 400;
+        color: white;
+        margin-bottom: 5px;
+}
+
+#summoner .tab2 .score.under {
+    background: rgb(229, 116, 116);
+}
+
+#summoner .tab3 {
+    min-width: 2ch;
+    text-align: center;
+    font-size: 12px;
+    color: rgb(102, 116, 143);
+    font-weight: 500;
+    display: flex
+;
+    flex-direction: column;
+}
+
+#summoner .tab3 .kda2 {
+    margin-top: 7px;
+    font-size: 10px;
+}
+
+#summoner .tab4 {
+    font-size: 12px;
+    color: rgb(102, 116, 143);
+    text-align: center;
+}
+
+#summoner .tab5 {
+    font-size: 12px;
+    color: rgb(102, 116, 143);
+    text-align: center;
+}
+
+#summoner .tab6 {
+    font-size: 12px;
+    color: rgb(102, 116, 143);
+    text-align: center;
+}
+
+#summoner .tab7 {
+    display: flex;
+    justify-content: center;
+}
+
+#summoner .tab7 img{
+    width: 20px;
+    height: 20px;
+    margin-left: 2px;
+    border-radius: 4px;
+}
+
+#summoner .detail table {
+    width: 100%;
+}
+
+#summoner .detail td {
+    vertical-align: middle;
+    padding: 4px 0;
+}
+
+/* popup */
+.popupContainer{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.30);
+    
+    /* animation */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    z-index: 1000;
+}
+
+
+.popupContainer.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.popupContainer .popupBox{
+    max-width: 800px;
+    width: 100%;
+    height: 300px;
+    padding: 24px;
+    border-radius: 10px;
+    border: 1px solid var(----Stroke, #E6E7E7);
+    background: var(----FF, #FFF);
+    max-height: 90vh;
+    overflow: auto;
+}
+
+.popupContainer .title{
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+}
+
+.popupContainer .title p{
+    color: var(----dark-100, #061310);    
+    font-size: 16px;    
+    font-weight: 700;
+}
+
+.popupContainer .title i{
+    cursor: pointer;
+    color: #061310;
+}
+
+.popupContainer .close{
+    display: inline-block;
+    float: right;
+    cursor: pointer;
+    margin-bottom: 20px;
 }

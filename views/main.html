@@ -9,13 +9,14 @@
     
     <form onsubmit="searchUser(event)">
         <div class="userNameWrap">
-            <input type="text" id="searchUserName" name="searchUserName" class="userNameInput" placeholder="소환사명 + #KR1" onkeyup="getUserList()"/>
+            <input type="text" id="searchUserName" name="searchUserName" class="userNameInput" placeholder="소환사명 + #KR1" 
+            onkeyup="getUserList()"
+            onfocus="getUserList()" autocomplete="off"/>
             <img src="/img/icon_search_color.svg" onclick="searchUser(event)"/>
         </div>
         <div id="userListWrap" class="hide">
             <span class="title">소환사</span>
             <div id="userList">
-                <p class="empty">검색 결과가 존재하지 않습니다.</p>
             </div>
         </div>
     </form>

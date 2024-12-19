@@ -14,7 +14,43 @@ async function searchUser(event) {
 }
 
 async function getUserList() {
-    document.getElementById('userListWrap').classList.remove("hide");
+    try {
+        document.getElementById('userListWrap').classList.remove("hide");
+    
+        const searchUserName = document.getElementById('searchUserName').value;
+
+        let userList = [],
+            userListHtml = ''
+
+        if(searchUserName.length >= 2) {
+            response = await axios.post(`/account/getUserList`, {
+                searchUserName: searchUserName
+            });
+            userList = response.data;
+        }
+
+        if(!userList.length) {
+            userListHtml  = `<p class="empty">검색 결과가 존재하지 않습니다.</p>`;
+        }else {
+            for(let data of userList) {
+                userListHtml += `
+                    <a href="/summoner/${data.gameName}-${data.tagLine}" class="userWrap">
+                        <img class="userIcon" src="https://deeplol-ddragon-cdn.deeplol.gg/cdn/14.24.1/img/profileicon/${ data.profileIconId }.png"/>
+                        <img class="userTier" src="https://www.deeplol.gg/images/Emblem_${data.soloRankTier}.png"/>
+                        <span class="userName">
+                            <span class="name">${data.gameName}</span>
+                            <span class="tag">#${data.tagLine}</span>
+                        </span>
+                    </a>
+                `;
+            }
+        }
+
+        document.getElementById('userList').innerHTML = userListHtml;
+        
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 function closeUserListWrap() {
