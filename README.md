@@ -40,11 +40,15 @@ COUNTRY=kr
 
 ### 3. 실행
 - Node.js 서버 실행
+```sh
 node app.js # 8083 포트에서 실행
+```
 
 - python 서버 실행
+```sh
 cd python
 python flask_server.py # 8090 포트에서 실행
+```
 
 ### 4. 결과 확인
 🌐 http://localhost:8083에서 결과를 확인할 수 있습니다.
