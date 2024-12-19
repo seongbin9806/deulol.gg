@@ -28,23 +28,17 @@ npm install
 ### 2. 환경 변수 설정
 프로젝트 루트 디렉토리에 .env 파일을 생성하고 다음과 같은 환경 변수를 설정합니다.
 (your_riot_api_key 발급 - https://developer.riotgames.com/apis)
-
-# Application running port
 PORT=8083
-
-# MongoDB connection URI
 MONGODB_URI=mongodb://localhost:27017/deugg
-
-# Riot Api
-RAPID_API_KEY=RGAPI-dc4e6b26-1222-465a-8c21-4068570da211
+RAPID_API_KEY=your_riot_api_key
 REGION=asia
 COUNTRY=kr
 
 ### 3. 실행
-# node
+- node
 1. node app.js - 8083 포트에서 실행
 
-# python
+- python
 1. /python 폴더로이동
 2. python flask_server.py - 8090 포트에서 실행
 
